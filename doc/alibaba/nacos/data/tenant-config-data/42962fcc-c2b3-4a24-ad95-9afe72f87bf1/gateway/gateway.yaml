@@ -1,0 +1,22 @@
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedHeaders: "*"
+            allowedMethods: "*"
+            allowedOrigins: "*"
+            allowCredentials: true
+      discovery:
+        locator:
+          lowerCaseServiceId: true
+          enabled: true
+      routes:
+        - id: sso
+          uri: lb://micro-sso
+          order: 8084
+          predicates:
+          - Path=/sso/**
+          filters:
+          - StripPrefix=1
