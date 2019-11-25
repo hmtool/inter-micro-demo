@@ -1,12 +1,11 @@
 package tech.mhuang.interchan.sso.sysrole.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import tech.mhuang.ext.interchan.core.entity.BaseEntity;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import tech.mhuang.ext.interchan.core.entity.BaseEntity;
+
+import java.io.Serializable;
+import java.util.Date;
 
 @Data
 @EqualsAndHashCode(callSuper = false)

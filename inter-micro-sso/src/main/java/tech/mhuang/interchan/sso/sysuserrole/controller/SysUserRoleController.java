@@ -16,6 +16,7 @@ import tech.mhuang.ext.interchan.core.local.GlobalHeaderThreadLocal;
 import tech.mhuang.ext.interchan.protocol.GlobalHeader;
 import tech.mhuang.ext.interchan.protocol.Result;
 import tech.mhuang.ext.interchan.protocol.data.PageVO;
+import tech.mhuang.ext.spring.util.DataUtil;
 import tech.mhuang.interchan.protocol.sso.sysuserrole.SysUserFunDTO;
 import tech.mhuang.interchan.protocol.sso.sysuserrole.SysUserFunVO;
 import tech.mhuang.interchan.protocol.sso.sysuserrole.SysUserRoleAddDTO;
@@ -23,7 +24,6 @@ import tech.mhuang.interchan.protocol.sso.sysuserrole.SysUserRoleCheckDTO;
 import tech.mhuang.interchan.protocol.sso.sysuserrole.SysUserRoleCheckVO;
 import tech.mhuang.interchan.protocol.sso.sysuserrole.SysUserRoleDTO;
 import tech.mhuang.interchan.protocol.sso.sysuserrole.SysUserRoleVO;
-import tech.mhuang.ext.spring.util.DataUtil;
 import tech.mhuang.interchan.sso.sysfunvisturl.service.ISyChanmgfunVistUrlService;
 import tech.mhuang.interchan.sso.sysuserrole.service.ISysUserRoleService;
 
@@ -53,25 +53,25 @@ public class SysUserRoleController extends BaseController {
             @ApiImplicitParam(name = "sysUserRoleAddDTO", value = "用户角色对象,多个roleid用逗号隔开", required = true, paramType = "body", dataType = "SysUserRoleAddDTO"),
     })
     public Result<?> setRoleUser(@RequestBody SysUserRoleAddDTO sysUserRoleAddDTO) {
-        sysUserRoleService.saveUserRole(sysUserRoleAddDTO, GlobalHeaderThreadLocal.getOrException().getUserId());
+        GlobalHeader globalHeader = GlobalHeaderThreadLocal.getOrException();
+        sysUserRoleService.saveUserRole(sysUserRoleAddDTO, globalHeader.getUserId());
         return Result.ok();
     }
 
 
     @ApiOperation(value = "查询用户角色信息", notes = "查询")
     @GetMapping(value = "/queryUserRole")
-    public Result<List<SysUserRoleVO>> queryUserRole(
-            @RequestParam(required = false) String userid) {
+    public Result<List<SysUserRoleVO>> queryUserRole(@RequestParam(required = false) String userid) {
         GlobalHeaderThreadLocal.getOrException();
         List<SysUserRoleDTO> userRoles = this.sysUserRoleService.queryUserRole(userid);
         List<SysUserRoleVO> roleVos = DataUtil.copyTo(userRoles, SysUserRoleVO.class);
         return (Result<List<SysUserRoleVO>>) Result.ok(roleVos);
     }
 
+
     @ApiOperation(value = "查询用户角色选择信息", notes = "查询")
     @GetMapping(value = "/queryUserRoleCheck")
-    public Result<PageVO<List<SysUserRoleCheckVO>>> queryUserRoleAll(
-            @RequestParam(required = false) String userid) {
+    public Result<PageVO<List<SysUserRoleCheckVO>>> queryUserRoleAll(@RequestParam(required = false) String userid) {
         GlobalHeaderThreadLocal.getOrException();
         List<SysUserRoleCheckDTO> userRoles = this.sysUserRoleService.queryUserRoleCheck(userid);
         List<SysUserRoleCheckVO> roleVos = DataUtil.copyTo(userRoles, SysUserRoleCheckVO.class);

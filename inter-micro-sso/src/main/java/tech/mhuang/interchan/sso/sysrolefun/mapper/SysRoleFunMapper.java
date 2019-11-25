@@ -1,12 +1,12 @@
 package tech.mhuang.interchan.sso.sysrolefun.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import tech.mhuang.ext.interchan.core.mapper.BaseMapper;
 import tech.mhuang.ext.interchan.protocol.InsertInto;
 import tech.mhuang.interchan.protocol.sso.sysfunrole.SysRoleFunBatchDTO;
 import tech.mhuang.interchan.protocol.sso.sysfunrole.SysRoleFunDTO;
 import tech.mhuang.interchan.protocol.sso.sysfunrole.SysRoleFunTreeDTO;
 import tech.mhuang.interchan.sso.sysrolefun.entity.SysRoleFun;
-import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public interface SysRoleFunMapper extends BaseMapper<SysRoleFun, String> {
      * @Title: deleteByRoleId
      * @Description: 删除角色功能权限
      */
-    void deleteByRoleId(String roleId);
+    public void deleteByRoleId(String roleId);
 
     /**
      * @param roleId
@@ -49,7 +49,7 @@ public interface SysRoleFunMapper extends BaseMapper<SysRoleFun, String> {
      * @Title: addRoleFun
      * @Description: 批量新增
      */
-    void addRoleFun(SysRoleFunBatchDTO batchDTO);
+    public void addRoleFun(SysRoleFunBatchDTO batchDTO);
 
     /**
      * @param into
@@ -57,7 +57,7 @@ public interface SysRoleFunMapper extends BaseMapper<SysRoleFun, String> {
      * @Title: insertIntoByFuns
      * @Description:插入历史，通过权限
      */
-    void insertIntoByFuns(InsertInto<List<String>> into);
+    public void insertIntoByFuns(InsertInto<List<String>> into);
 
     /**
      * @param ids
@@ -65,6 +65,6 @@ public interface SysRoleFunMapper extends BaseMapper<SysRoleFun, String> {
      * @Title: deleteByFuns
      * @Description:删除通过权限id
      */
-    void deleteByFuns(List<String> ids);
+    public void deleteByFuns(List<String> ids);
 
 }

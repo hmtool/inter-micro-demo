@@ -1,15 +1,4 @@
-/**
- * All rights Reserved, Designed By http://www.pete-cat.com/
- *
- * @Title: SysFunController.java
- * @Package tech.mhuang.interchan.sso.sysuserfun
- * @Description:系统功能
- * @author: 成都皮特猫科技
- * @date:2017年7月20日 下午6:48:48
- * @version V1.0
- * @Copyright: 2017 www.pete-cat.com Inc. All rights reserved.
- * 注意：本内容仅限于成都皮特猫信息技术有限公司内部传阅，禁止外泄以及用于其他的商业目
- */
+
 package tech.mhuang.interchan.sso.sysfun.controller;
 
 import io.swagger.annotations.Api;
@@ -31,22 +20,22 @@ import tech.mhuang.ext.interchan.core.controller.BaseController;
 import tech.mhuang.ext.interchan.core.local.GlobalHeaderThreadLocal;
 import tech.mhuang.ext.interchan.protocol.Result;
 import tech.mhuang.ext.interchan.protocol.data.PageVO;
+import tech.mhuang.ext.spring.util.DataUtil;
 import tech.mhuang.interchan.protocol.sso.sysfun.SysFunAddDTO;
 import tech.mhuang.interchan.protocol.sso.sysfun.SysFunModDTO;
 import tech.mhuang.interchan.protocol.sso.sysfun.SysFunPageQueryDTO;
 import tech.mhuang.interchan.protocol.sso.sysfun.SysFunQueryDTO;
 import tech.mhuang.interchan.protocol.sso.sysfun.SysFunTreeQueryDTO;
 import tech.mhuang.interchan.protocol.sso.sysfun.SysFunVO;
-import tech.mhuang.ext.spring.util.DataUtil;
 import tech.mhuang.interchan.sso.sysfun.service.ISysFunService;
 
 import java.util.List;
 
 /**
- * @ClassName: SysFunController
- * @Description:系统功能权限
- * @author: admin
- * @date: 2017年7月20日 下午6:48:48
+ * 权限控制器
+ *
+ * @author zhangxh
+ * @since 1.0.0
  */
 @RestController
 @Api(value = "系统功能权限管理", tags = "功能权限")
@@ -79,8 +68,7 @@ public class SysFunController extends BaseController {
 
     @ApiOperation(value = "分页查询功能权限信息", notes = "分页查询")
     @GetMapping(value = "/queryFunByPage")
-    public Result<PageVO<SysFunVO>> queryFunByPage(
-            @ModelAttribute SysFunPageQueryDTO pageQry) {
+    public Result<PageVO<SysFunVO>> queryFunByPage(@ModelAttribute SysFunPageQueryDTO pageQry) {
         GlobalHeaderThreadLocal.getOrException();
         PageVO<SysFunVO> pageVo = this.sysFunService.queryFunByPage(pageQry);
         return (Result<PageVO<SysFunVO>>) Result.ok(pageVo);
@@ -88,8 +76,7 @@ public class SysFunController extends BaseController {
 
     @ApiOperation(value = "树形结构查询权限信息", notes = "查询")
     @GetMapping(value = "/queryFunTree")
-    public Result<PageVO<SysFunVO>> queryFunTree(
-            @ModelAttribute SysFunTreeQueryDTO queryTree) {
+    public Result<PageVO<SysFunVO>> queryFunTree(@ModelAttribute SysFunTreeQueryDTO queryTree) {
         GlobalHeaderThreadLocal.getOrException();
         if (StringUtil.isNotBlank(queryTree.getNodeid())) {
             queryTree.setParentid(queryTree.getNodeid());
@@ -114,19 +101,17 @@ public class SysFunController extends BaseController {
 
     @ApiOperation(value = "删除功能权限信息", notes = "删除")
     @DeleteMapping(value = "/deleteFun")
-    public Result<?> remove(
-            @RequestParam String funid) {
+    public Result<?> remove(@RequestParam String funid) {
         this.sysFunService.deleteFun(funid, GlobalHeaderThreadLocal.getOrException().getUserId());
         return Result.ok();
     }
 
     @ApiOperation(value = "查询功能权限信息", notes = "查询")
     @GetMapping(value = "/queryFun")
-    public Result<SysFunVO> queryFun(
-            @RequestParam String funid) {
-        GlobalHeaderThreadLocal.getOrException();
+    public Result<SysFunVO> queryFun(@RequestParam String funid) {
         SysFunQueryDTO dto = this.sysFunService.queryFun(funid, true);
         SysFunVO funVo = DataUtil.copyTo(dto, SysFunVO.class);
         return (Result<SysFunVO>) Result.ok(funVo);
     }
+
 }

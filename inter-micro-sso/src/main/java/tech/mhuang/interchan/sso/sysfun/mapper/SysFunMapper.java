@@ -1,10 +1,10 @@
 package tech.mhuang.interchan.sso.sysfun.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import tech.mhuang.ext.interchan.core.mapper.BaseMapper;
 import tech.mhuang.ext.interchan.protocol.InsertInto;
 import tech.mhuang.interchan.protocol.sso.sysfun.SysFunDTO;
 import tech.mhuang.interchan.sso.sysfun.entity.SysFun;
-import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
@@ -58,7 +58,7 @@ public interface SysFunMapper extends BaseMapper<SysFun, String> {
     void insertIntos(InsertInto<List<String>> into);
 
     /**
-     * @param funid
+     * @param funids
      * @return void
      * @Title: deleteFunByIds
      * @Description: 删除功能号

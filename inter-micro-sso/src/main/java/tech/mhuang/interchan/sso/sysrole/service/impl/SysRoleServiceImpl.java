@@ -12,13 +12,13 @@ import tech.mhuang.ext.interchan.protocol.InsertInto;
 import tech.mhuang.ext.interchan.protocol.Result;
 import tech.mhuang.ext.interchan.protocol.data.Page;
 import tech.mhuang.ext.interchan.protocol.data.PageVO;
+import tech.mhuang.ext.spring.util.DataUtil;
 import tech.mhuang.interchan.protocol.sso.sysrole.SysRoleAddDTO;
 import tech.mhuang.interchan.protocol.sso.sysrole.SysRoleModDTO;
 import tech.mhuang.interchan.protocol.sso.sysrole.SysRolePageQueryDTO;
 import tech.mhuang.interchan.protocol.sso.sysrole.SysRoleQueryDTO;
 import tech.mhuang.interchan.protocol.sso.sysrole.SysRoleVO;
 import tech.mhuang.interchan.protocol.sso.sysrole.request.SysRolePageQueryQVO;
-import tech.mhuang.ext.spring.util.DataUtil;
 import tech.mhuang.interchan.sso.sysrole.domain.SysRolePageQueryDO;
 import tech.mhuang.interchan.sso.sysrole.entity.SysRole;
 import tech.mhuang.interchan.sso.sysrole.mapper.SysRoleMapper;
@@ -49,15 +49,19 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole, String> impleme
     private ISysUserRoleService sysUserRoleService;
 
     @Autowired
-    private BaseIdeable<String> baseIdeable;
+    private BaseIdeable<String> snowflake;
 
     @Autowired
     private Environment environment;
 
-    public void setMapper(SysRoleMapper sysRoleMapper) {
-        this.setBaseMapper(sysRoleMapper);
-    }
-
+    /**
+     * <p>Title: saveRole</p>
+     * <p>Description: </p>
+     *
+     * @param sysRoleAddDTO
+     * @param userId
+     * @see ISysRoleService#saveRole(SysRoleAddDTO, String)
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void saveRole(SysRoleAddDTO sysRoleAddDTO, String userId) {
@@ -72,7 +76,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole, String> impleme
         role.setOperateUser(userId);
         this.sysRoleMapper.save(role);
         InsertInto<String> into = new InsertInto<>();
-        into.setReqNo(baseIdeable.generateId());
+        into.setReqNo(snowflake.generateId());
         into.setId(role.getRoleid());
         into.setStatus(InsertInto.ADD);
         into.setUserId(userId);
@@ -80,6 +84,14 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole, String> impleme
     }
 
 
+    /**
+     * <p>Title: saveRole</p>
+     * <p>Description: </p>
+     *
+     * @param sysRoleModDTO
+     * @param userId
+     * @see ISysRoleService#saveRole(SysRoleAddDTO, String)
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void updateRole(SysRoleModDTO sysRoleModDTO, String userId) {
@@ -94,13 +106,21 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole, String> impleme
         role.setOperateUser(userId);
         this.sysRoleMapper.update(role);
         InsertInto<String> into = new InsertInto<>();
-        into.setReqNo(baseIdeable.generateId());
+        into.setReqNo(snowflake.generateId());
         into.setId(role.getRoleid());
         into.setStatus(InsertInto.UPDATE);
         into.setUserId(userId);
         this.sysRoleMapper.insertInto(into);
     }
 
+    /**
+     * <p>Title: queryRoleByPage</p>
+     * <p>Description: </p>
+     *
+     * @param dto
+     * @return
+     * @see ISysRoleService#queryRoleByPage(SysRolePageQueryDTO)
+     */
     @Override
     public PageVO<SysRoleVO> queryRoleByPage(SysRolePageQueryDTO dto) {
         Page<SysRole> page = new Page<>();
@@ -115,6 +135,15 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole, String> impleme
         return pageVo;
     }
 
+
+    /**
+     * <p>Title: queryRole</p>
+     * <p>Description: </p>
+     *
+     * @param roleid
+     * @param nullException 是否抛出数据不存在异常
+     * @return SysRoleQueryDTO
+     */
     @Override
     public SysRoleQueryDTO queryRole(String roleid, boolean nullException) {
         SysRole role = sysRoleMapper.getById(roleid);
@@ -130,11 +159,17 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole, String> impleme
     }
 
 
+    /**
+     * <p>Title: deleteRole</p>
+     * <p>Description: </p>
+     *
+     * @param roleid
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void deleteRole(String roleid, String userId) {
         InsertInto<String> into = new InsertInto<>();
-        into.setReqNo(baseIdeable.generateId());
+        into.setReqNo(snowflake.generateId());
         into.setId(roleid);
         into.setStatus(InsertInto.DELETE);
         into.setUserId(userId);
@@ -146,6 +181,14 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole, String> impleme
 
     }
 
+    /**
+     * <p>Title: pageOrderRole</p>
+     * <p>Description: </p>
+     *
+     * @param dto
+     * @return
+     * @see ISysRoleService#pageOrderRole(SysRolePageQueryQVO)
+     */
     @Override
     public List<SysRole> pageOrderRole(SysRolePageQueryQVO dto) {
         Page<SysRolePageQueryDO> page = DataUtil.copyTo(dto, Page.class);
@@ -155,10 +198,17 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole, String> impleme
         return sysRoles;
     }
 
+    /**
+     * <p>Title: findByRoleIds</p>
+     * <p>Description: </p>
+     *
+     * @param roleIds
+     * @return
+     * @see ISysRoleService#findByRoleIds(List)
+     */
     @Override
     public List<SysRole> findByRoleIds(List<String> roleIds) {
-        List<SysRole> sysRoles = sysRoleMapper.findByRoleIds(roleIds);
-        return sysRoles;
+        return sysRoleMapper.findByRoleIds(roleIds);
     }
 
 }

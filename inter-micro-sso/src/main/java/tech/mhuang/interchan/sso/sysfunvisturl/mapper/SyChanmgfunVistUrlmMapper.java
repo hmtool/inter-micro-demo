@@ -1,12 +1,12 @@
 package tech.mhuang.interchan.sso.sysfunvisturl.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import tech.mhuang.ext.interchan.core.mapper.BaseMapper;
 import tech.mhuang.ext.interchan.protocol.InsertInto;
 import tech.mhuang.interchan.sso.sysfunvisturl.entity.SyChanmgfunExcludeUrl;
 import tech.mhuang.interchan.sso.sysfunvisturl.entity.SyChanmgfunVistUrlm;
 import tech.mhuang.interchan.sso.sysuser.entity.SysUser;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 

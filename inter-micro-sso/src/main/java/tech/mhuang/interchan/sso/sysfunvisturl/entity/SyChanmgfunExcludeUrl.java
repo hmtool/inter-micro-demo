@@ -1,12 +1,12 @@
 package tech.mhuang.interchan.sso.sysfunvisturl.entity;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
 
-import lombok.Data;
-
 /**
- * @author 
+ * @author
  */
 @Data
 public class SyChanmgfunExcludeUrl implements Serializable {

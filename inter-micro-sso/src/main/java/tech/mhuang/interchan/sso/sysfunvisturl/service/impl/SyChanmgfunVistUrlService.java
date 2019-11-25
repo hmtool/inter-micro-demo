@@ -1,23 +1,23 @@
 package tech.mhuang.interchan.sso.sysfunvisturl.service.impl;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import tech.mhuang.core.id.BaseIdeable;
+import tech.mhuang.core.util.CollectionUtil;
 import tech.mhuang.core.util.StringUtil;
 import tech.mhuang.ext.interchan.auth.constant.AuthConstant;
+import tech.mhuang.ext.interchan.core.rest.SingleRestTemplate;
 import tech.mhuang.ext.interchan.core.service.impl.BaseServiceImpl;
 import tech.mhuang.ext.interchan.protocol.InsertInto;
+import tech.mhuang.ext.interchan.redis.commands.IRedisExtCommands;
+import tech.mhuang.ext.spring.util.DataUtil;
 import tech.mhuang.interchan.protocol.sso.sysfunvisturl.SyChanmgfunExcludeUrlDTO;
 import tech.mhuang.interchan.protocol.sso.sysfunvisturl.SyChanmgfunVistUrlmAddDTO;
 import tech.mhuang.interchan.protocol.sso.sysfunvisturl.SyChanmgfunVistUrlmQryDTO;
-import tech.mhuang.ext.interchan.redis.commands.IRedisExtCommands;
-import tech.mhuang.ext.spring.util.DataUtil;
 import tech.mhuang.interchan.sso.sysfunvisturl.entity.SyChanmgfunExcludeUrl;
 import tech.mhuang.interchan.sso.sysfunvisturl.entity.SyChanmgfunVistUrlm;
 import tech.mhuang.interchan.sso.sysfunvisturl.mapper.SyChanmgfunVistUrlmMapper;
@@ -43,19 +43,20 @@ public class SyChanmgfunVistUrlService
         extends BaseServiceImpl<SyChanmgfunVistUrlm, String> implements ISyChanmgfunVistUrlService, InitializingBean {
 
     @Autowired
+    private BaseIdeable<String> snowflake;
+
+    @Autowired
     private IRedisExtCommands redisExtCommands;
 
     @Autowired
     private SyChanmgfunVistUrlmMapper syChanmgfunVistUrlmMapper;
 
-    @Autowired
-    private BaseIdeable<String> baseIdeable;
-
-    @Autowired
-    private void setMapper(SyChanmgfunVistUrlmMapper syChanmgfunVistUrlmMapper) {
-        super.setBaseMapper(syChanmgfunVistUrlmMapper);
-    }
-
+    /**
+     * @param funid
+     * @return void
+     * @Title: insertHByAuth
+     * @Description: 插入历史通过权限
+     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void insertHByAuth(String funid, String userId, String status, String seqno) {
@@ -63,31 +64,40 @@ public class SyChanmgfunVistUrlService
         into.setId(funid);
         into.setOpDate(new Date());
         into.setUserId(userId);
-        into.setReqNo(baseIdeable.generateId());
+        into.setReqNo(snowflake.generateId());
         into.setStatus(status);
         this.syChanmgfunVistUrlmMapper.insertIntoByAuth(into);
     }
 
-
+    /**
+     * @param funid
+     * @return void
+     * @Title: deleteByAuth
+     * @Description:删除通过权限
+     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void deleteByAuth(String funid) {
         this.syChanmgfunVistUrlmMapper.deleteByAuth(funid);
     }
 
-
+    /**
+     * <p>Title: insertPowers</p>
+     * <p>Description: </p>
+     *
+     * @param dtos
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void insertPowersUrl(List<SyChanmgfunVistUrlmAddDTO> dtos, String userId, String seqno) {
         dtos.forEach((value) -> {
-            SyChanmgfunVistUrlm url = new SyChanmgfunVistUrlm();
-            BeanUtils.copyProperties(value, url);
+            SyChanmgfunVistUrlm url = DataUtil.copyTo(value,SyChanmgfunVistUrlm.class);
             url.setOperateTime(new Date());
             url.setOperateUser(userId);
-            url.setId(baseIdeable.generateId());
+            url.setId(snowflake.generateId());
             this.syChanmgfunVistUrlmMapper.save(url);
         });
-        if (!CollectionUtils.isEmpty(dtos)) {
+        if (CollectionUtil.isNotEmpty(dtos)) {
             InsertInto<String> into = new InsertInto<>();
             into.setReqNo(seqno);
             into.setId(dtos.get(0).getFunid());
@@ -98,19 +108,30 @@ public class SyChanmgfunVistUrlService
         }
     }
 
+    /**
+     * <p>Title: queryFunVist</p>
+     * <p>Description: </p>
+     *
+     * @param funid
+     * @return
+     */
     @Override
     public List<SyChanmgfunVistUrlmQryDTO> queryFunVist(String funid) {
         List<SyChanmgfunVistUrlm> urlm = this.syChanmgfunVistUrlmMapper.queryFunVist(funid);
         return DataUtil.copyTo(urlm, SyChanmgfunVistUrlmQryDTO.class);
     }
 
-
+    /**
+     * @return void
+     * @Title: setExcludeUrl
+     * @Description: 设置排除地址
+     */
     @Override
     public List<SyChanmgfunExcludeUrlDTO> setExcludeUrl() {
         List<SyChanmgfunExcludeUrlDTO> vos = null;
         //查询数据库，并放入缓存中
         List<SyChanmgfunExcludeUrl> urls = this.syChanmgfunVistUrlmMapper.getExcludeUrl();
-        if (!CollectionUtils.isEmpty(urls)) {
+        if (CollectionUtil.isNotEmpty(urls)) {
             Map datas =
                     urls.parallelStream().collect(Collectors.groupingBy(SyChanmgfunExcludeUrl::getType));
             this.redisExtCommands.hmset(AuthConstant.AUTH_DICT_KEY, datas);
@@ -118,19 +139,30 @@ public class SyChanmgfunVistUrlService
         return vos;
     }
 
-
+    /**
+     * <p>Title: afterPropertiesSet</p>
+     * <p>Description: </p>
+     *
+     * @throws Exception
+     * @see InitializingBean#afterPropertiesSet()
+     */
     @Override
-    public void afterPropertiesSet() {
+    public void afterPropertiesSet() throws Exception {
         setExcludeUrl();
     }
 
-
+    /**
+     * <p>Title: setVistUrlPower</p>
+     * <p>Description: </p>
+     *
+     * @param userid
+     */
     @Override
     public void setVistUrlPower(String userid) {
         //检查路径与权限问题
         String cacheKey = AuthConstant.USER_VIST_URL_CACHEKEY;
         List<SyChanmgfunVistUrlm> vistUrls = this.redisExtCommands.hgetList(cacheKey, userid, SyChanmgfunVistUrlm.class);
-        if (CollectionUtils.isEmpty(vistUrls)) {
+        if (CollectionUtil.isEmpty(vistUrls)) {
             //不存在的时候设置权限
             setVistUrlPowerNow(userid);
         }
@@ -148,6 +180,12 @@ public class SyChanmgfunVistUrlService
 
     }
 
+    /**
+     * @param roleid
+     * @return void
+     * @Title: setUserVistPowerByRoleAsync
+     * @Description:设置人员角色权限信息
+     */
     @Override
     @Async
     public void setUserVistPowerByRoleAsync(String roleid) {
@@ -160,10 +198,16 @@ public class SyChanmgfunVistUrlService
         });
     }
 
+    /**
+     * <p>Title: setUserVistPowerByRolesAsync</p>
+     * <p>Description: </p>
+     *
+     * @param roles
+     */
     @Async
     @Override
     public void setUserVistPowerByRolesAsync(List<SysRole> roles) {
-        if (!CollectionUtils.isEmpty(roles)) {
+        if (CollectionUtil.isNotEmpty(roles)) {
             //查询角色对应的用户信息
             List<String> roleIds =
                     roles.parallelStream().map(value -> value.getRoleid()).collect(Collectors.toList());
@@ -174,6 +218,15 @@ public class SyChanmgfunVistUrlService
         }
     }
 
+    /**
+     * <p>Title: deleteByFunsIds</p>
+     * <p>Description: </p>
+     *
+     * @param ids
+     * @param userId
+     * @param reqNo
+     * @see ISyChanmgfunVistUrlService#deleteByFunsIds(List, String, String, String)
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void deleteByFunsIds(List<String> ids, String userId, String status, String reqNo) {
@@ -187,6 +240,13 @@ public class SyChanmgfunVistUrlService
         this.syChanmgfunVistUrlmMapper.deleteByAuths(ids);
     }
 
+    /**
+     * <p>Title: reloadVistUrl</p>
+     * <p>Description: </p>
+     *
+     * @param userId
+     * @see ISyChanmgfunVistUrlService#reloadVistUrl(String)
+     */
     @Override
     public void reloadVistUrl(String userId) {
         if (StringUtil.isNotBlank(userId)) {

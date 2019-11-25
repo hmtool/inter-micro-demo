@@ -60,7 +60,6 @@ public class SysUserController extends BaseController {
     @Autowired
     private JwtFramework jwtFramework;
 
-    @SuppressWarnings("unchecked")
     @GetMapping("/queryUserByPage")
     @ApiOperation(value = "系统用户分页查询", notes = "分页查询")
     @ApiImplicitParams({
@@ -115,7 +114,11 @@ public class SysUserController extends BaseController {
             @ApiImplicitParam(name = "sysUserUpdateDTO", value = "修改的对象", required = true, paramType = "body", dataType = "SysUserUpdateDTO"),
     })
     public Result<?> updateUser(@RequestBody SysUserUpdateDTO sysUserUpdateDTO) {
-        sysUserUpdateDTO.setOperateUser(GlobalHeaderThreadLocal.getOrException().getUserId());
+        if (true) {
+            throw new NullPointerException();
+        }
+        GlobalHeader globalHeader = GlobalHeaderThreadLocal.getOrException();
+        sysUserUpdateDTO.setOperateUser(globalHeader.getUserId());
         sysUserService.updateUser(sysUserUpdateDTO);
         return Result.ok();
     }
@@ -126,7 +129,8 @@ public class SysUserController extends BaseController {
             @ApiImplicitParam(name = "updatePwd", value = "修改的对象", required = true, paramType = "body", dataType = "UpdatePwd"),
     })
     public Result<?> updatePassword(@RequestBody UpdatePwdDTO updatePwd) {
-        updatePwd.setUserid(GlobalHeaderThreadLocal.getOrException().getUserId());
+        GlobalHeader globalHeader = GlobalHeaderThreadLocal.getOrException();
+        updatePwd.setUserid(globalHeader.getUserId());
         sysUserService.updatePwd(updatePwd);
         return Result.ok();
     }
@@ -134,7 +138,9 @@ public class SysUserController extends BaseController {
     @ApiOperation(value = "系统登录密码修改", notes = "修改")
     @PutMapping("/updateLoginPwd")
     public Result<?> updateLoginPwd(@RequestBody UpdateCenterPwdDTO updatePwd) {
-        updatePwd.setUserid(GlobalHeaderThreadLocal.getOrException().getUserId());
+
+        GlobalHeader globalHeader = GlobalHeaderThreadLocal.getOrException();
+        updatePwd.setUserid(globalHeader.getUserId());
         sysUserService.updateLoginPwd(updatePwd);
         return Result.ok();
     }
@@ -145,7 +151,8 @@ public class SysUserController extends BaseController {
             @ApiImplicitParam(name = "resetPwd", value = "修改的对象", required = true, paramType = "body", dataType = "ResetPwdDTO"),
     })
     public Result<?> resetPassword(@RequestBody ResetPwdDTO resetPwd) {
-        resetPwd.setOperateUser(GlobalHeaderThreadLocal.getOrException().getUserId());
+        GlobalHeader globalHeader = GlobalHeaderThreadLocal.getOrException();
+        resetPwd.setOperateUser(globalHeader.getUserId());
         sysUserService.resetPwd(resetPwd);
         return Result.ok();
     }
@@ -153,7 +160,7 @@ public class SysUserController extends BaseController {
     @ApiOperation(value = "用户锁定/解锁", notes = "锁定/解锁")
     @PutMapping("/lockUser")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "lockUserDTO", value = "锁定的对象", required = true, paramType = "body", dataType = "LockUserDTO"),
+            @ApiImplicitParam(name = "lockUserDTO", value = "锁定的对象", required = true, paramType = "body", dataType = "UserDTO"),
     })
     public Result<?> lockUser(@RequestBody UserDTO lockUserDTO) {
         lockUserDTO.setOperateUser(GlobalHeaderThreadLocal.getOrException().getUserId());
@@ -176,6 +183,7 @@ public class SysUserController extends BaseController {
     @ApiOperation(value = "系统用户使用密码登录", notes = "登录")
     @GetMapping("/loginUsePwd")
     public Result<?> loginUsePwd(@RequestParam String mobilephone, @RequestParam String password) {
+
         LoginSysUserDTO userDto = this.sysUserService.loginUsePwd(mobilephone, password);
         LoginSysUserVO userVo = DataUtil.copyTo(userDto, LoginSysUserVO.class);
         Map<String, Object> claimMap = new HashMap<>();
@@ -184,15 +192,16 @@ public class SysUserController extends BaseController {
         String token = jwtFramework.getProducer("zhangsan").create(claimMap);
         userVo.setToken(token);
         userVo.setAuthType("zhangsan");
+        Map<String, String> headerMap = new HashMap<>();
+        headerMap.put("Authorization", "Bearer " + token);
+        headerMap.put("authType", "zhangsan");
         return Result.ok(userVo);
     }
-
 
     @SuppressWarnings("unchecked")
     @GetMapping("/findByUserIds")
     @ApiOperation(value = "查询用户信息", notes = "查询用户信息")
-    public Result<List<SysUserRVO>> findByUserIds(
-            @RequestParam String userIds) {
+    public Result<List<SysUserRVO>> findByUserIds(@RequestParam String userIds) {
         GlobalHeaderThreadLocal.getOrException();
         List<SysUser> users = sysUserService.findByUserIds(Arrays.asList(userIds.split(",")));
         return (Result<List<SysUserRVO>>) Result.ok(DataUtil.copyTo(users, SysUserRVO.class));

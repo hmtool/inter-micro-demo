@@ -1,10 +1,10 @@
 package tech.mhuang.interchan.sso.sysuser.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import tech.mhuang.ext.interchan.core.mapper.BaseMapper;
 import tech.mhuang.ext.interchan.protocol.data.Page;
 import tech.mhuang.interchan.sso.sysuser.domain.SysUserDO;
 import tech.mhuang.interchan.sso.sysuser.entity.SysUser;
-import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 

@@ -1,5 +1,6 @@
 package tech.mhuang.interchan.sso.sysuserrole.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import tech.mhuang.ext.interchan.core.mapper.BaseMapper;
 import tech.mhuang.ext.interchan.protocol.InsertInto;
 import tech.mhuang.interchan.protocol.sso.sysuserrole.SysUserFunDTO;
@@ -7,7 +8,6 @@ import tech.mhuang.interchan.protocol.sso.sysuserrole.SysUserRoleBatchDTO;
 import tech.mhuang.interchan.protocol.sso.sysuserrole.SysUserRoleCheckDTO;
 import tech.mhuang.interchan.protocol.sso.sysuserrole.SysUserRoleDTO;
 import tech.mhuang.interchan.sso.sysuserrole.entity.SysUserRole;
-import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 

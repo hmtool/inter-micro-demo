@@ -2,14 +2,11 @@ package tech.mhuang.interchan.sso.sysuser.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import tech.mhuang.core.id.BaseIdeable;
-import tech.mhuang.core.util.CryptoUtil;
 import tech.mhuang.core.util.StringUtil;
 import tech.mhuang.ext.interchan.core.constans.Global;
 import tech.mhuang.ext.interchan.core.exception.BusinessException;
@@ -43,13 +40,16 @@ import java.util.Date;
 import java.util.List;
 
 @Service("sysUserService")
-@RefreshScope
 public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> implements ISysUserService {
 
+    @Autowired
     private SysUserMapper sysUserMapper;
 
     @Autowired
     private SysUserRecordMapper sysUserRecordMapper;
+
+    @Autowired
+    private BaseIdeable<String> snowflake;
 
     @Autowired
     private IRedisExtCommands redisExtCommands;
@@ -63,22 +63,13 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
     @Autowired
     private Environment environment;
 
-    @Autowired
-    private BaseIdeable<String> baseIdeable;
-
     @Value("${sysuser_pwd_enc_key}")
     private String encryptKey;
 
-    @Autowired
-    public void setSysUserMapper(SysUserMapper sysUserMapper) {
-        this.sysUserMapper = sysUserMapper;
-        this.setBaseMapper(sysUserMapper);
-    }
-
     @Override
     public PageVO<SysUserVO> queryUserByPage(SysUserDTO sysUserDTO) {
-        PageVO<SysUserVO> result = new PageVO<SysUserVO>();
-        Page<SysUser> pageUser = new Page<SysUser>();
+        PageVO<SysUserVO> result = new PageVO<>();
+        Page<SysUser> pageUser = new Page<>();
         packPageQueryUser(sysUserDTO, pageUser);
         result.setTotalSize(sysUserMapper.count(pageUser.getRecord()));
         List<SysUser> sysUserList = sysUserMapper.page(pageUser);
@@ -110,7 +101,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
                     environment.getProperty("chan_mobile_repeat"));
         }
         sysUser = DataUtil.copyTo(sysUserAddDTO, SysUser.class);
-        sysUser.setUserid(baseIdeable.generateId());
+        sysUser.setUserid(snowflake.generateId());
         sysUser.setEntrantdate(new Date());
         sysUser.setOperateTime(new Date());
         try {
@@ -123,25 +114,21 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
         }
 
         int count = save(sysUser);
-        insertHistory(sysUser, InsertInto.ADD, count);
-
-        this.setSyuserRedisMobileToUser(sysUserAddDTO.getMobilephone(), sysUser.getUserid());
-        this.setSyuserRedisUserIdToUser(sysUser.getUserid(), sysUser);
-    }
-
-    private void insertHistory(SysUser sysUser, String status, int count) {
         if (count == 0) {
             throw new BusinessException(Result.SYS_FAILD, Result.FAILD_MSG);
         }
 
         InsertInto<String> insertInto = new InsertInto<>();
         insertInto.setId(sysUser.getUserid());
-        insertInto.setReqNo(baseIdeable.generateId());
-        insertInto.setStatus(status);
+        insertInto.setReqNo(snowflake.generateId());
+        insertInto.setStatus(InsertInto.ADD);
         count = sysUserRecordMapper.insertInto(insertInto);
         if (count == 0) {
             throw new BusinessException(Result.SYS_FAILD, Result.FAILD_MSG);
         }
+
+        this.setSyuserRedisMobileToUser(sysUserAddDTO.getMobilephone(), sysUser.getUserid());
+        this.setSyuserRedisUserIdToUser(sysUser.getUserid(), sysUser);
     }
 
     @Override
@@ -168,7 +155,18 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
         }
 
         int count = update(sysUser);
-        insertHistory(sysUser, InsertInto.UPDATE, count);
+        if (count == 0) {
+            throw new BusinessException(Result.SYS_FAILD, Result.FAILD_MSG);
+        }
+
+        InsertInto<String> insertInto = new InsertInto<>();
+        insertInto.setId(sysUser.getUserid());
+        insertInto.setReqNo(snowflake.generateId());
+        insertInto.setStatus(InsertInto.UPDATE);
+        count = sysUserRecordMapper.insertInto(insertInto);
+        if (count == 0) {
+            throw new BusinessException(Result.SYS_FAILD, Result.FAILD_MSG);
+        }
 
         sysUser = sysUserMapper.getById(sysUserUpdateDTO.getUserid());
         this.setSyuserRedisMobileToUser(sysUser.getMobilephone(), sysUser.getUserid());
@@ -198,7 +196,18 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
         }
 
         int count = update(sysUser);
-        insertHistory(sysUser, InsertInto.UPDATE, count);
+        if (count == 0) {
+            throw new BusinessException(Result.SYS_FAILD, Result.FAILD_MSG);
+        }
+
+        InsertInto<String> insertInto = new InsertInto<>();
+        insertInto.setId(sysUser.getUserid());
+        insertInto.setReqNo(snowflake.generateId());
+        insertInto.setStatus(InsertInto.UPDATE);
+        count = sysUserRecordMapper.insertInto(insertInto);
+        if (count == 0) {
+            throw new BusinessException(Result.SYS_FAILD, Result.FAILD_MSG);
+        }
 
         sysUser = sysUserMapper.getById(updatePwdDTO.getUserid());
         this.setSyuserRedisUserIdToUser(sysUser.getUserid(), sysUser);
@@ -242,7 +251,18 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
         }
 
         int count = update(sysUser);
-        insertHistory(sysUser, InsertInto.UPDATE, count);
+        if (count == 0) {
+            throw new BusinessException(Result.SYS_FAILD, Result.FAILD_MSG);
+        }
+
+        InsertInto<String> insertInto = new InsertInto<>();
+        insertInto.setId(sysUser.getUserid());
+        insertInto.setReqNo(snowflake.generateId());
+        insertInto.setStatus(InsertInto.UPDATE);
+        count = sysUserRecordMapper.insertInto(insertInto);
+        if (count == 0) {
+            throw new BusinessException(Result.SYS_FAILD, Result.FAILD_MSG);
+        }
 
         sysUser = sysUserMapper.getById(updatePwdDTO.getUserid());
         this.setSyuserRedisUserIdToUser(sysUser.getUserid(), sysUser);
@@ -270,7 +290,19 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
         }
 
         int count = update(sysUser);
-        insertHistory(sysUser, InsertInto.UPDATE, count);
+        if (count == 0) {
+            throw new BusinessException(Result.SYS_FAILD, Result.FAILD_MSG);
+        }
+
+        InsertInto<String> insertInto = new InsertInto<>();
+        insertInto.setId(sysUser.getUserid());
+        insertInto.setReqNo(snowflake.generateId());
+        insertInto.setStatus(InsertInto.UPDATE);
+        count = sysUserRecordMapper.insertInto(insertInto);
+        if (count == 0) {
+            throw new BusinessException(Result.SYS_FAILD, Result.FAILD_MSG);
+        }
+
         sysUser = sysUserMapper.getById(resetPwdDTO.getUserid());
         this.setSyuserRedisUserIdToUser(sysUser.getUserid(), sysUser);
     }
@@ -289,7 +321,18 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
         sysUser.setOperateTime(new Date());
 
         int count = sysUserMapper.lock(sysUser);
-        insertHistory(sysUser, InsertInto.UPDATE, count);
+        if (count == 0) {
+            throw new BusinessException(Result.SYS_FAILD, Result.FAILD_MSG);
+        }
+
+        InsertInto<String> insertInto = new InsertInto<>();
+        insertInto.setId(sysUser.getUserid());
+        insertInto.setReqNo(snowflake.generateId());
+        insertInto.setStatus(InsertInto.UPDATE);
+        count = sysUserRecordMapper.insertInto(insertInto);
+        if (count == 0) {
+            throw new BusinessException(Result.SYS_FAILD, Result.FAILD_MSG);
+        }
 
         sysUser = sysUserMapper.getById(lockUserDTO.getUserid());
         this.setSyuserRedisUserIdToUser(sysUser.getUserid(), sysUser);
@@ -301,7 +344,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
      *
      * @param mobilephone
      * @param password
-     * @see tech.mhuang.interchan.sso.sysuser.service.ISysUserService#loginUsePwd(java.lang.String, java.lang.String)
+     * @see ISysUserService#loginUsePwd(String, String)
      */
     @Override
     public LoginSysUserDTO loginUsePwd(String mobilephone, String password) {
@@ -358,9 +401,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
 
     /**
      * @param mobilephone
-     * @return SysUser
-     * @Title: getCacheUserByMobileToLogin
-     * @Description:
+     * @param errorKey
      */
     private SysUser getCacheUserByMobileToLogin(String mobilephone, String errorKey) {
         SysUser sysuser = null;
@@ -410,6 +451,24 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
     }
 
     /**
+     * @Title: getSyuserRedisMobileToUserIdKey
+     * @Description:获取SYUSER_REDIS_MOBILE_TOUSERID_KEY的值
+     * @return: String
+     */
+    public String getSyuserRedisMobileToUserIdKey(String mobilephone) {
+        return SYUSER_REDIS_MOBILE_TOUSERID_PREKEY + mobilephone;
+    }
+
+    /**
+     * @Title: getSyuserRedisUseridToUserPrekey
+     * @Description:获取SYUSER_REDIS_USERID_TO_USER_PREKEY的值
+     * @return: String
+     */
+    public String getSyuserRedisUserIdToUserKey(String userId) {
+        return SYUSER_REDIS_USERID_TO_USER_PREKEY + userId;
+    }
+
+    /**
      * @Title: setSyuserRedisMobileToUser
      * @Description:设置手机号到用户ID的缓存
      * @return: String
@@ -455,7 +514,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
      *
      * @param sysUserDTO
      * @return
-     * @see tech.mhuang.interchan.sso.sysuser.service.ISysUserService#pageForOrder(tech.mhuang.interchan.protocol.sso.sysuser.dto.SysUserPageQryDTO)
+     * @see ISysUserService#pageForOrder(SysUserPageQryDTO)
      */
     @Override
     public List<SysUserPageDTO> pageForOrder(SysUserPageQryDTO sysUserDTO) {
@@ -473,7 +532,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, String> impleme
      *
      * @param userIds
      * @return
-     * @see tech.mhuang.interchan.sso.sysuser.service.ISysUserService#findByUserIds(java.util.List)
+     * @see ISysUserService#findByUserIds(List)
      */
     @Override
     public List<SysUser> findByUserIds(List<String> userIds) {

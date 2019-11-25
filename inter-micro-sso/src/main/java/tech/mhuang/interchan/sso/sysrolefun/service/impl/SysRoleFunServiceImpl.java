@@ -8,11 +8,11 @@ import tech.mhuang.core.id.BaseIdeable;
 import tech.mhuang.core.util.StringUtil;
 import tech.mhuang.ext.interchan.core.service.impl.BaseServiceImpl;
 import tech.mhuang.ext.interchan.protocol.InsertInto;
+import tech.mhuang.ext.spring.util.DataUtil;
 import tech.mhuang.interchan.protocol.sso.sysfunrole.SysRoleFunAddDTO;
 import tech.mhuang.interchan.protocol.sso.sysfunrole.SysRoleFunBatchDTO;
 import tech.mhuang.interchan.protocol.sso.sysfunrole.SysRoleFunDTO;
 import tech.mhuang.interchan.protocol.sso.sysfunrole.SysRoleFunTreeDTO;
-import tech.mhuang.ext.spring.util.DataUtil;
 import tech.mhuang.interchan.sso.sysrolefun.entity.SysRoleFun;
 import tech.mhuang.interchan.sso.sysrolefun.mapper.SysRoleFunMapper;
 import tech.mhuang.interchan.sso.sysrolefun.service.ISysRoleFunService;
@@ -37,11 +37,14 @@ public class SysRoleFunServiceImpl extends BaseServiceImpl<SysRoleFun, String> i
     @Autowired
     private BaseIdeable<String> baseIdeable;
 
-    @Autowired
-    public void setMapper(SysRoleFunMapper sysRoleFunMapper) {
-        this.setBaseMapper(sysRoleFunMapper);
-    }
-
+    /**
+     * <p>Title: saveRoleFun</p>
+     * <p>Description: </p>
+     *
+     * @param sysRoleFunAddDTO
+     * @param userId
+     * @see ISysRoleFunService#saveRoleFun(SysRoleFunAddDTO, String)
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void saveRoleFun(SysRoleFunAddDTO sysRoleFunAddDTO, String userId) {
@@ -69,16 +72,40 @@ public class SysRoleFunServiceImpl extends BaseServiceImpl<SysRoleFun, String> i
 
     }
 
+    /**
+     * <p>Title: queryRoleFunTree</p>
+     * <p>Description: </p>
+     *
+     * @param roleid
+     * @return
+     * @see ISysRoleFunService#queryRoleFunTree(String)
+     */
     @Override
     public List<SysRoleFunTreeDTO> queryRoleFunTree(String roleid) {
         return this.sysRoleFunMapper.queryRoleFunTree(roleid);
     }
 
+    /**
+     * <p>Title: queryRoleFun</p>
+     * <p>Description: </p>
+     *
+     * @param roleid
+     * @return
+     * @see ISysRoleFunService#queryRoleFun(String)
+     */
     @Override
     public List<SysRoleFunDTO> queryRoleFun(String roleid) {
         return this.sysRoleFunMapper.queryRoleFun(roleid);
     }
 
+    /**
+     * <p>Title: deleteRoleFunByRole</p>
+     * <p>Description: </p>
+     *
+     * @param roleid
+     * @param userId
+     * @see ISysRoleFunService#deleteRoleFunByRole(String, String)
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void deleteRoleFunByRole(String roleid, String userId) {
@@ -92,7 +119,12 @@ public class SysRoleFunServiceImpl extends BaseServiceImpl<SysRoleFun, String> i
         this.sysRoleFunMapper.deleteByRoleId(roleid);
     }
 
-
+    /**
+     * <p>Title: deleteRoleFunByFuns</p>
+     * <p>Description: </p>
+     *
+     * @param ids
+     */
     @Override
     public void deleteRoleFunByFuns(List<String> ids, String userId) {
         this.sysRoleFunMapper.deleteByFuns(ids);
@@ -104,4 +136,6 @@ public class SysRoleFunServiceImpl extends BaseServiceImpl<SysRoleFun, String> i
         into.setOpDate(new Date());
         this.sysRoleFunMapper.insertIntoByFuns(into);
     }
+
+
 }

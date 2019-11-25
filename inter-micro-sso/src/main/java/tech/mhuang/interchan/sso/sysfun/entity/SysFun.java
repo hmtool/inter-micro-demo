@@ -1,12 +1,11 @@
 package tech.mhuang.interchan.sso.sysfun.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import tech.mhuang.ext.interchan.core.entity.BaseEntity;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import tech.mhuang.ext.interchan.core.entity.BaseEntity;
+
+import java.io.Serializable;
+import java.util.Date;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -65,14 +64,14 @@ public class SysFun extends BaseEntity implements Serializable {
      * 操作时间
      */
     private Date operateTime;
-    
+
     /**
      * 附件ID
      */
 
     private String attachid;
-    
-    
+
+
     /**
      * sy_chanmgfunm
      */

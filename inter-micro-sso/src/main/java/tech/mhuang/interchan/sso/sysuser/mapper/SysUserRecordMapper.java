@@ -1,8 +1,8 @@
 package tech.mhuang.interchan.sso.sysuser.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import tech.mhuang.ext.interchan.core.mapper.BaseMapper;
 import tech.mhuang.interchan.sso.sysuser.entity.SysUserRecord;
-import org.apache.ibatis.annotations.Mapper;
 
 /**
  * @ClassName: SysUserRecordMapper

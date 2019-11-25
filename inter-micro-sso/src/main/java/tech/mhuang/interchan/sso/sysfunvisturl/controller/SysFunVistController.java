@@ -12,9 +12,9 @@ import tech.mhuang.ext.interchan.core.controller.BaseController;
 import tech.mhuang.ext.interchan.core.local.GlobalHeaderThreadLocal;
 import tech.mhuang.ext.interchan.protocol.GlobalHeader;
 import tech.mhuang.ext.interchan.protocol.Result;
+import tech.mhuang.ext.spring.util.DataUtil;
 import tech.mhuang.interchan.protocol.sso.sysfunvisturl.SyChanmgfunVistUrlmQryDTO;
 import tech.mhuang.interchan.protocol.sso.sysfunvisturl.SyChanmgfunVistUrlmQryVO;
-import tech.mhuang.ext.spring.util.DataUtil;
 import tech.mhuang.interchan.sso.sysfunvisturl.service.ISyChanmgfunVistUrlService;
 
 import java.util.List;
@@ -36,8 +36,7 @@ public class SysFunVistController extends BaseController {
     @SuppressWarnings("unchecked")
     @ApiOperation(value = "通过功能权限查询访问vo", notes = "查询")
     @GetMapping(value = "/getVistUrl")
-    public Result<List<SyChanmgfunVistUrlmQryVO>> getVistUrl(
-            @RequestParam String funid) {
+    public Result<List<SyChanmgfunVistUrlmQryVO>> getVistUrl(@RequestParam String funid) {
         GlobalHeaderThreadLocal.getOrException();
         List<SyChanmgfunVistUrlmQryDTO> dtos = this.syChanmgfunVistUrlService.queryFunVist(funid);
         List<SyChanmgfunVistUrlmQryVO> vos = DataUtil.copyTo(dtos, SyChanmgfunVistUrlmQryVO.class);
@@ -49,7 +48,12 @@ public class SysFunVistController extends BaseController {
     @GetMapping(value = "/reloadVistUrl")
     public Result<?> reloadVistUrl() {
         GlobalHeader userHead = GlobalHeaderThreadLocal.get();
-        this.syChanmgfunVistUrlService.reloadVistUrl(userHead.getUserId());
+        if (userHead != null) {
+            this.syChanmgfunVistUrlService.reloadVistUrl(userHead.getUserId());
+        } else {
+            this.syChanmgfunVistUrlService.reloadVistUrl(null);
+        }
+
         return Result.ok();
     }
 }

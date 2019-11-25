@@ -1,15 +1,15 @@
 package tech.mhuang.interchan.sso.sysrolefun.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
 public class SysRoleFun implements Serializable {
-	  /**
+    /**
      * 权限ID
      */
     private String funid;
@@ -18,7 +18,7 @@ public class SysRoleFun implements Serializable {
      * 用户ID
      */
     private String roleid;
-    
+
     /**
      * 操作时间
      */

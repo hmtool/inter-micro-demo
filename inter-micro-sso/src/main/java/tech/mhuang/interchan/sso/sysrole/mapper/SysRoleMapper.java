@@ -1,10 +1,10 @@
 package tech.mhuang.interchan.sso.sysrole.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import tech.mhuang.ext.interchan.core.mapper.BaseMapper;
 import tech.mhuang.ext.interchan.protocol.data.Page;
 import tech.mhuang.interchan.sso.sysrole.domain.SysRolePageQueryDO;
 import tech.mhuang.interchan.sso.sysrole.entity.SysRole;
-import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 

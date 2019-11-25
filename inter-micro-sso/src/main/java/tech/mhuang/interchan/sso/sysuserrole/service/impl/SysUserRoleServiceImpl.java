@@ -37,7 +37,7 @@ public class SysUserRoleServiceImpl extends BaseServiceImpl<SysUserRole, String>
     private SysUserRoleMapper sysUserRoleMapper;
 
     @Autowired
-    private BaseIdeable<String> baseIdeable;
+    private BaseIdeable<String> snowflake;
 
     @Autowired
     private IRedisExtCommands redisExtCommands;
@@ -50,12 +50,18 @@ public class SysUserRoleServiceImpl extends BaseServiceImpl<SysUserRole, String>
         this.setBaseMapper(sysUserRoleMapper);
     }
 
-
+    /**
+     * <p>Title: saveUserRole</p>
+     * <p>Description: </p>
+     *
+     * @param sysUserRoleAddDTO
+     * @param userid
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void saveUserRole(SysUserRoleAddDTO sysUserRoleAddDTO, String userid) {
         InsertInto<String> into = new InsertInto<>();
-        into.setReqNo(baseIdeable.generateId());
+        into.setReqNo(snowflake.generateId());
         into.setId(sysUserRoleAddDTO.getUserid());
         into.setStatus(InsertInto.DELETE);
         into.setUserId(userid);
@@ -71,7 +77,7 @@ public class SysUserRoleServiceImpl extends BaseServiceImpl<SysUserRole, String>
         }
 
         this.sysUserRoleMapper.addUserRole(batchDTO);
-        into.setReqNo(baseIdeable.generateId());
+        into.setReqNo(snowflake.generateId());
         into.setStatus(InsertInto.UPDATE);
         this.sysUserRoleMapper.insertInto(into);
 
@@ -83,7 +89,7 @@ public class SysUserRoleServiceImpl extends BaseServiceImpl<SysUserRole, String>
      *
      * @param userid
      * @return
-     * @see tech.mhuang.interchan.sso.sysuserrole.service.ISysUserRoleService#queryUserRole(java.lang.String)
+     * @see ISysUserRoleService#queryUserRole(String)
      */
     @Override
     public List<SysUserRoleDTO> queryUserRole(String userid) {
@@ -96,7 +102,7 @@ public class SysUserRoleServiceImpl extends BaseServiceImpl<SysUserRole, String>
      *
      * @param userid
      * @return
-     * @see tech.mhuang.interchan.sso.sysuserrole.service.ISysUserRoleService#queryUserFun(java.lang.String)
+     * @see ISysUserRoleService#queryUserFun(String)
      */
     @Override
     public List<SysUserFunDTO> queryUserFun(String userid) {
@@ -109,19 +115,26 @@ public class SysUserRoleServiceImpl extends BaseServiceImpl<SysUserRole, String>
      *
      * @param userid
      * @return
-     * @see tech.mhuang.interchan.sso.sysuserrole.service.ISysUserRoleService#queryUserRoleCheck(java.lang.String)
+     * @see ISysUserRoleService#queryUserRoleCheck(String)
      */
     @Override
     public List<SysUserRoleCheckDTO> queryUserRoleCheck(String userid) {
         return this.sysUserRoleMapper.queryUserRoleCheck(userid);
     }
 
-
+    /**
+     * <p>Title: sysUserRoleService</p>
+     * <p>Description: </p>
+     *
+     * @param roleid
+     * @param userId
+     * @see ISysUserRoleService#sysUserRoleService(String, String)
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void sysUserRoleService(String roleid, String userId) {
         InsertInto<String> into = new InsertInto<>();
-        into.setReqNo(baseIdeable.generateId());
+        into.setReqNo(snowflake.generateId());
         into.setId(roleid);
         into.setStatus(InsertInto.DELETE);
         into.setUserId(userId);
@@ -130,9 +143,18 @@ public class SysUserRoleServiceImpl extends BaseServiceImpl<SysUserRole, String>
         this.sysUserRoleMapper.deleteByRoleId(roleid);
     }
 
+    /**
+     * <p>Title: setUserRoleToCache</p>
+     * <p>Description: </p>
+     *
+     * @param userId
+     * @see ISysUserRoleService#setUserRoleToCache(String)
+     */
     @Override
     public void setUserRoleToCache(String userId) {
         List<SysUserRoleDTO> userRoles = this.queryUserRole(userId);
         redisExtCommands.hset(SYSTEM_USER_ROLE_CACHE_KEY, userId, userRoles);
     }
+
+
 }

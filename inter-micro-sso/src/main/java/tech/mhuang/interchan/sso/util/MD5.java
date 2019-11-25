@@ -1,16 +1,17 @@
 package tech.mhuang.interchan.sso.util;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class MD5 {
 
     private static Logger logger = LoggerFactory.getLogger(MD5.class);
-	public static String GetMD5Code(String source,int length){
-		 String result = "";
+
+    public static String GetMD5Code(String source, int length) {
+        String result = "";
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(source.getBytes());
@@ -26,12 +27,12 @@ public class MD5 {
                 buf.append(Integer.toHexString(i));
             }
             result = buf.toString();
-            if(length != 32){
-            	result =  buf.toString().substring(8, 24);
+            if (length != 32) {
+                result = buf.toString().substring(8, 24);
             }
         } catch (NoSuchAlgorithmException e) {
-            logger.error("MD5加密异常",e);
+            logger.error("MD5加密异常", e);
         }
         return result;
-	}
+    }
 }

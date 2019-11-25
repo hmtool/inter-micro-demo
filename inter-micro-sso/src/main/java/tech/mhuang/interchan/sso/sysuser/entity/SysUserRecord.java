@@ -1,26 +1,25 @@
 package tech.mhuang.interchan.sso.sysuser.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import tech.mhuang.ext.interchan.core.entity.BaseEntity;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import tech.mhuang.ext.interchan.core.entity.BaseEntity;
+
+import java.io.Serializable;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class SysUserRecord extends BaseEntity implements Serializable {
-	/**
+    /**
      * sy_chanmguserm
      */
     private static final long serialVersionUID = 1L;
-    
-	/**
+
+    /**
      * 用户唯一编号（建议从100000000开始）
      */
     private String userid;
@@ -29,7 +28,7 @@ public class SysUserRecord extends BaseEntity implements Serializable {
      * 序列号
      */
     private String reqno;
-    
+
     /**
      * 用户名称
      */

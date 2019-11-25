@@ -1,12 +1,11 @@
 package tech.mhuang.interchan.sso.util;
 
-import java.security.MessageDigest;
-import java.security.SecureRandom;
+import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.commons.codec.binary.Base64;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
 
 public class AES {
     // 加密算法
