@@ -17,15 +17,15 @@ hmtool springcloud版demo
     + bootstrap3+
     + jquery2+
 - 后台
-    + springboot2.1.8+
-    + hmtool-ext-interchan 
-    + elasticsearch 6+
-    + kafka 2.11+
+    + springboot2.2.2+
+    + hmtool-ext-interchan 1.4.1+ 
+    + elasticsearch 7.5+
+    + kafka 2.4+
     + jdk1.8+
     + swagger2
     + nacos 1.1.3+
     + sentinel 1.6.3+
-    + spring cloud Greenwich3
+    + spring cloud Hoxton.RELEASE+
 ## 项目结构
 - inter-micro-demo(parent)
     + inter-micro-protocol(协议包、存放DTO,QVO,RVO等)
@@ -60,4 +60,3 @@ hmtool springcloud版demo
 - 访问
         
         访问http://127.0.0.1:8088/直接点击登录即可
->>>>>>> 1.0.0
