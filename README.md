@@ -38,7 +38,7 @@ hmtool springcloud版demo
 ## 案例运行步骤
 - 安装软件环境
 
-        elasticsearch6+（日志），kibana6+（用于查看日志情况)，mysql5.7+（数据库），jdk1.8+,kafka2.1+(消息消费)
+        elasticsearch7+（日志），kibana7+（用于查看日志情况)，mysql5.7+（数据库），jdk1.8+,kafka2.4+(消息消费)
 - 创建mysql数据库
         
         sql脚本存放在doc/数据库文件/inter-boot-demo.sql、先创建数据库、在选择数据库指定sql进行导入、
