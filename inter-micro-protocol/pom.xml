@@ -20,9 +20,5 @@
             <groupId>tech.mhuang</groupId>
             <artifactId>interchan-protocol-common</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-        </dependency>
     </dependencies>
 </project>
