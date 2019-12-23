@@ -1,18 +1,18 @@
 package tech.mhuang.interchan.protocol.sso.sysfun;
 
-import java.io.Serializable;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
+
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SysFunTreeQueryDTO  implements Serializable {
+public class SysFunTreeQueryDTO implements Serializable {
     /**
      * 功能代号
      */
     private String funid;
-    
+
     private String nodeid;
 
     /**
@@ -44,7 +44,7 @@ public class SysFunTreeQueryDTO  implements Serializable {
      * 是否展示【0：否/1：是】
      */
     private String displayfun;
-    
+
 
     /**
      * sy_chanmgfunm

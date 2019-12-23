@@ -1,13 +1,13 @@
 package tech.mhuang.interchan.protocol.sso.sysuserrole;
 
-import java.io.Serializable;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
+
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SysUserRoleDTO  implements Serializable {
+public class SysUserRoleDTO implements Serializable {
     /**
      * 角色代号
      */

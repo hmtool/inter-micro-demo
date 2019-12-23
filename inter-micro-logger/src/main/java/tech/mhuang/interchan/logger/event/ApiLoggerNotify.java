@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import tech.mhuang.interchan.logger.entity.ESAsyncLogger;
 
 /**
- *
  * 日志通知
  *
  * @author mhuang
@@ -18,7 +17,7 @@ public class ApiLoggerNotify {
     @Autowired
     private ApplicationContext applicationContext;
 
-    public void notify(ESAsyncLogger param){
+    public void notify(ESAsyncLogger param) {
         applicationContext.publishEvent(new ApiLoggerEvent(param));
     }
 }

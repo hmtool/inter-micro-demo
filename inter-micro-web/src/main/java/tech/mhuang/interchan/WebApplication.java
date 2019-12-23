@@ -26,6 +26,7 @@ public class WebApplication {
 
     /**
      * 跨域过滤器
+     *
      * @return
      */
     @Bean

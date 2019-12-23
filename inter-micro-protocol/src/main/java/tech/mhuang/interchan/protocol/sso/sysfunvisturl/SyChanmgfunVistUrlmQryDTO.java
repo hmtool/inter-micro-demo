@@ -1,12 +1,12 @@
 package tech.mhuang.interchan.protocol.sso.sysfunvisturl;
 
-import java.io.Serializable;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
+
 /**
- * @author 
+ * @author
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

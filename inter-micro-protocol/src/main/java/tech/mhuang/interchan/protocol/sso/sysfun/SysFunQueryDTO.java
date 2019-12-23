@@ -1,14 +1,14 @@
 package tech.mhuang.interchan.protocol.sso.sysfun;
 
-import java.io.Serializable;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
+
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SysFunQueryDTO  implements Serializable {
-	  /**
+public class SysFunQueryDTO implements Serializable {
+    /**
      * 功能代号
      */
     private String funid;
@@ -52,13 +52,13 @@ public class SysFunQueryDTO  implements Serializable {
      * 是否展示【0：否/1：是】
      */
     private String displayfun;
-    
+
 
     /**
      * 父功能代号
      */
     private String parentName;
-    
+
     /**
      * sy_chanmgfunm
      */

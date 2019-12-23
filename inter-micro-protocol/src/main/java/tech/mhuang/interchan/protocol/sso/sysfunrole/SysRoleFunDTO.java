@@ -1,23 +1,23 @@
 package tech.mhuang.interchan.protocol.sso.sysfunrole;
 
-import java.io.Serializable;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
+
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SysRoleFunDTO  implements Serializable {
+public class SysRoleFunDTO implements Serializable {
     /**
      * 功能代号
      */
     private String funid;
-    
+
     /**
      * 功能名称
      */
     private String fundesc;
-    
+
     /**
      * 父代码
      */
@@ -27,9 +27,9 @@ public class SysRoleFunDTO  implements Serializable {
      * 父功能名称
      */
     private String parentName;
-    
+
     private int orderval;
-    
+
     /**
      * sy_chanmgfunm
      */

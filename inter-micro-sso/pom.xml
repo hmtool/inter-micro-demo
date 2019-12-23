@@ -6,7 +6,7 @@
     <parent>
         <groupId>tech.mhuang.interchan</groupId>
         <artifactId>inter-micro-demo</artifactId>
-       <version>1.4.2</version>
+        <version>1.4.2</version>
     </parent>
     <artifactId>inter-micro-sso</artifactId>
     <name>inter-micro-sso</name>

@@ -8,7 +8,7 @@
     <packaging>pom</packaging>
     <name>inter-micro-demo</name>
     <url>http://maven.apache.org</url>
-   <version>1.4.2</version>
+    <version>1.4.2</version>
     <properties>
         <java.version>1.8</java.version>
         <interchan.version>1.4.1</interchan.version>
@@ -19,7 +19,7 @@
     <parent>
         <groupId>tech.mhuang</groupId>
         <artifactId>hmtool-ext-interchan</artifactId>
-       <version>1.4.2</version>
+        <version>1.4.2</version>
     </parent>
     <dependencyManagement>
         <dependencies>

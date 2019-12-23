@@ -1,11 +1,10 @@
 package tech.mhuang.interchan.protocol.sso.sysfun;
 
-import java.io.Serializable;
-
-import tech.mhuang.ext.interchan.protocol.data.PageDTO;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import tech.mhuang.ext.interchan.protocol.data.PageDTO;
+
+import java.io.Serializable;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -14,7 +13,7 @@ public class SysFunPageQueryDTO extends PageDTO implements Serializable {
      * 功能代号
      */
     private String funid;
-   
+
 
     /**
      * 功能名称
@@ -40,7 +39,7 @@ public class SysFunPageQueryDTO extends PageDTO implements Serializable {
      * 是否展示【0：否/1：是】
      */
     private String displayfun;
-    
+
     /**
      * sy_chanmgfunm
      */

@@ -17,6 +17,6 @@ spring:
           uri: lb://micro-sso
           order: 8084
           predicates:
-          - Path=/sso/**
+            - Path=/sso/**
           filters:
-          - StripPrefix=1
+            - StripPrefix=1
