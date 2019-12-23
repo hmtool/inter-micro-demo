@@ -6,7 +6,7 @@
     <parent>
         <groupId>tech.mhuang.interchan</groupId>
         <artifactId>inter-micro-demo</artifactId>
-        <version>1.4.2</version>
+        <version>1.4.3</version>
     </parent>
     <artifactId>inter-micro-sso</artifactId>
     <name>inter-micro-sso</name>
@@ -90,6 +90,10 @@
         <dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-datasource-nacos</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-spring-boot-starter</artifactId>
         </dependency>
     </dependencies>
     <build>
