@@ -56,8 +56,7 @@ public class SysRoleController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "sysRoleAddDTO", value = "角色对象", required = true, paramType = "body", dataType = "SysRoleAddDTO"),
     })
-    public Result<?> saveRole(@RequestBody SysRoleAddDTO sysRoleAddDTO,
-                              @ApiIgnore @RequestHeader(name = Global.GLOBAL_HEADER, required = false) String header) {
+    public Result<?> saveRole(@RequestBody SysRoleAddDTO sysRoleAddDTO) {
         GlobalHeader globalHeader = GlobalHeaderThreadLocal.getOrException();
         sysRoleService.saveRole(sysRoleAddDTO, globalHeader.getUserId());
         return Result.ok();

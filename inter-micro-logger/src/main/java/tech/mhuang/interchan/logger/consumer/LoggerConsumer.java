@@ -37,9 +37,9 @@ public class LoggerConsumer {
         if (ObjectUtil.isNotEmpty(logger)) {
             IESFactory esFactory = esFramework.getFactory(logger.getName());
             if (logger.getOpType().equals(ESAsyncLoggerOpType.INSERT)) {
-                esFactory.insert(logger.getEsOperatorLogger(), logger.getIndex(), logger.getType());
+                esFactory.insert(logger.getEsOperatorLogger(), logger.getIndex());
             } else {
-                esFactory.update(logger.getEsOperatorLogger(), logger.getIndex(), logger.getType(),
+                esFactory.update(logger.getEsOperatorLogger(), logger.getIndex(),
                         logger.getEsOperatorLogger().getId());
             }
         }

@@ -51,8 +51,7 @@ public class SysRoleFunController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "sysRoleFunAddDTO", value = "角色功能对象,多个funid用逗号隔开", required = true, paramType = "body", dataType = "SysRoleFunAddDTO"),
     })
-    public Result<?> setRoleFun(@RequestBody SysRoleFunAddDTO sysRoleFunAddDTO,
-                                @ApiIgnore @RequestHeader(name = Global.GLOBAL_HEADER, required = false) String header) {
+    public Result<?> setRoleFun(@RequestBody SysRoleFunAddDTO sysRoleFunAddDTO) {
         GlobalHeader globalHeader = GlobalHeaderThreadLocal.getOrException();
         sysRoleFunService.saveRoleFun(sysRoleFunAddDTO, globalHeader.getUserId());
         return Result.ok();
