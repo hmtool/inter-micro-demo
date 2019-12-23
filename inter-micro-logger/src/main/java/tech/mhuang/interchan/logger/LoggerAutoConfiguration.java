@@ -14,7 +14,7 @@ import tech.mhuang.core.check.CheckAssert;
  * @since 1.0.0
  */
 @Configuration
-@ConditionalOnProperty(prefix = "mhuang.interchan.logger", name = "enable", havingValue = "true")
+@ConditionalOnProperty(prefix = "mhuang.interchan.logger", name = "enable", havingValue = "true",matchIfMissing = true)
 @EnableConfigurationProperties(value = {LoggerProperties.class})
 public class LoggerAutoConfiguration {
 
